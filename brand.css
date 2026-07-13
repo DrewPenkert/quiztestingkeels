@@ -1,0 +1,62 @@
+/* ============================================
+   ProcureTEX Brand Tokens
+   Event: 3 November 2026 · Circa, Amsterdam
+   ============================================ */
+
+:root {
+
+  /* --- Colours --- */
+  --color-purple:       #6B35E8;   /* Primary brand purple — backgrounds, hero fills */
+  --color-purple-dark:  #1A0A3C;   /* Deep navy — dark sections, card backs */
+  --color-purple-mid:   #3D1F8F;   /* Mid purple — gradient stops, overlays */
+  --color-lime:         #C8FF00;   /* Lime green — accent only, labels, CTA, highlights */
+  --color-navy:         #0D0720;   /* Deepest navy — page background */
+  --color-white:        #FFFFFF;   /* Primary text on dark */
+  --color-muted:        #B8A8E8;   /* Secondary text — subtitles, dates, supporting copy */
+  --color-border:       rgba(200, 255, 0, 0.2); /* Lime border at low opacity */
+
+  /* --- Gradients --- */
+  --gradient-bg:        linear-gradient(135deg, #1A0A3C 0%, #6B35E8 100%);
+  --gradient-card:      linear-gradient(160deg, #3D1F8F 0%, #1A0A3C 100%);
+  --gradient-fade-left: linear-gradient(to right, #1A0A3C 0%, rgba(26,10,60,0.7) 40%, transparent 100%);
+
+  /* --- Typography --- */
+  --font-display:  'DM Sans', sans-serif;
+  --font-body:     'DM Sans', sans-serif;
+
+  --text-label:    10px;
+  --text-sm:       12px;
+  --text-base:     14px;
+  --text-md:       18px;
+  --text-lg:       24px;
+  --text-xl:       32px;
+  --text-2xl:      44px;
+  --text-3xl:      56px;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold:600;
+  --weight-bold:    700;
+  --weight-black:   900;
+
+  --tracking-tight:  -0.03em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.08em;
+
+  /* --- Spacing --- */
+  --space-xs:   8px;
+  --space-sm:   16px;
+  --space-md:   24px;
+  --space-lg:   32px;
+  --space-xl:   48px;
+
+  /* --- Border radius --- */
+  --radius-sm:   8px;
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-pill: 100px;
+
+  /* --- Post sizes (display / export) --- */
+  /* Square 1:1  → 480×480px display · 1080×1080 export */
+  /* Banner 16:9 → 480×270px display · 1200×675 export  */
+}

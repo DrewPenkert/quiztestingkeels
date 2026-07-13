@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ProcureTEX Partner Post</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0D0720;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 40px;
+  }
+
+  .card {
+    width: 480px;
+    height: 480px;
+    background: linear-gradient(135deg, #1A0A3C 0%, #3D1F8F 100%);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Node/lattice pattern */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(200,255,0,0.12) 1px, transparent 1px),
+      radial-gradient(circle, rgba(107,53,232,0.2) 1px, transparent 1px);
+    background-size: 40px 40px, 20px 20px;
+    background-position: 0 0, 10px 10px;
+    z-index: 0;
+  }
+
+  .content {
+    position: absolute;
+    inset: 0;
+    padding: 32px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .logo-top {
+    position: absolute;
+    top: 32px;
+    left: 32px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .logo-top span { color: #C8FF00; }
+
+  .label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #B8A8E8;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+
+  /* Partner logo container */
+  .partner-logo-wrap {
+    width: 200px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 28px;
+  }
+
+  .partner-logo-wrap img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: brightness(0) invert(1); /* makes logos white — remove if logo has colour */
+  }
+
+  .divider {
+    width: 36px;
+    height: 2px;
+    background: #C8FF00;
+    margin: 0 auto 20px;
+  }
+
+  .proud-partner {
+    font-size: 13px;
+    font-weight: 500;
+    color: #B8A8E8;
+    letter-spacing: 0.02em;
+    margin-bottom: 6px;
+  }
+
+  .brand-name {
+    font-size: 32px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.03em;
+  }
+  .brand-name span { color: #C8FF00; }
+
+  .event-detail {
+    position: absolute;
+    bottom: 32px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 32px;
+    align-items: center;
+  }
+
+  .event-info {
+    font-size: 11px;
+    font-weight: 500;
+    color: #B8A8E8;
+    line-height: 1.5;
+  }
+
+  .event-url {
+    font-size: 11px;
+    font-weight: 600;
+    color: #C8FF00;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     COMMUNITY PARTNER POST — 1:1 Square
+     Replace: partner logo src
+     ═══════════════════════════════════ -->
+<div class="card">
+  <div class="logo-top">Procure<span>TEX</span></div>
+
+  <div class="content">
+    <div class="label">Community Partners</div>
+
+    <!-- Replace with partner logo — use base64 for self-contained file -->
+    <div class="partner-logo-wrap">
+      <img src="https://via.placeholder.com/180x60/ffffff/000000?text=Partner+Logo" alt="Partner Logo">
+    </div>
+
+    <div class="divider"></div>
+    <div class="proud-partner">Proud partner of</div>
+    <div class="brand-name">Procure<span>TEX</span></div>
+  </div>
+
+  <div class="event-detail">
+    <div class="event-info">3 November 2026<br>Circa, Amsterdam</div>
+    <div class="event-url">procuretex.com</div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProcureTEX Speaker Card</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #0D0720;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    font-family: 'DM Sans', sans-serif;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 40px;
+  }
+
+  /* ── Card shell: 480×480px display (export at 2.25× = 1080×1080) ── */
+  .card {
+    width: 480px;
+    height: 480px;
+    background: linear-gradient(135deg, #1A0A3C 0%, #6B35E8 100%);
+    border-radius: 0;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  /* ── Lattice/node pattern overlay ── */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle, rgba(200,255,0,0.15) 1px, transparent 1px),
+      radial-gradient(circle, rgba(200,255,0,0.08) 1px, transparent 1px);
+    background-size: 40px 40px, 20px 20px;
+    background-position: 0 0, 10px 10px;
+    z-index: 0;
+  }
+
+  /* ── Left-side fade so text stays legible over photo ── */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, #1A0A3C 0%, rgba(26,10,60,0.85) 38%, rgba(26,10,60,0.2) 65%, transparent 100%);
+    z-index: 1;
+  }
+
+  /* ── Speaker photo — right side ── */
+  .photo {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 62%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    z-index: 0;
+  }
+
+  /* ── All text content ── */
+  .content {
+    position: absolute;
+    inset: 0;
+    padding: 32px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 18px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+  }
+  .logo span { color: #C8FF00; }
+
+  /* Label pill */
+  .label {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid rgba(200,255,0,0.35);
+    border-radius: 100px;
+    padding: 3px 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #C8FF00;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    width: fit-content;
+  }
+
+  /* Main text block */
+  .text-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .speaker-name {
+    font-size: 28px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 6px;
+    max-width: 220px;
+  }
+
+  .speaker-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #B8A8E8;
+    line-height: 1.4;
+    max-width: 200px;
+    margin-bottom: 4px;
+  }
+
+  .speaker-company {
+    font-size: 12px;
+    font-weight: 600;
+    color: #C8FF00;
+    letter-spacing: 0.02em;
+  }
+
+  /* Divider */
+  .divider {
+    width: 36px;
+    height: 2px;
+    background: #C8FF00;
+    margin: 14px 0;
+  }
+
+  /* Session tag (optional) */
+  .session-tag {
+    font-size: 11px;
+    font-weight: 600;
+    color: #B8A8E8;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    max-width: 200px;
+  }
+
+  /* Footer */
+  .footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #C8FF00;
+    border-radius: 100px;
+    padding: 0 20px;
+    height: 36px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #0D0720;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  .event-url {
+    font-size: 11px;
+    font-weight: 500;
+    color: #B8A8E8;
+    letter-spacing: 0.01em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     SINGLE SPEAKER CARD — 1:1 Square
+     Replace: speaker name, title, company,
+     session label, and photo src
+     ═══════════════════════════════════════ -->
+<div class="card">
+  <!-- Replace src with speaker headshot (base64 or URL) -->
+  <img class="photo" src="https://via.placeholder.com/300x480/6B35E8/ffffff?text=Speaker+Photo" alt="Speaker">
+
+  <div class="content">
+    <!-- Top: Logo -->
+    <div class="logo">Procure<span>TEX</span></div>
+
+    <!-- Middle: Speaker info -->
+    <div class="text-block">
+      <div class="label">Speaker</div>
+      <div class="speaker-name">Firstname Lastname</div>
+      <div class="divider"></div>
+      <div class="speaker-title">Head of Procurement Excellence</div>
+      <div class="speaker-company">Company Name</div>
+      <div class="session-tag" style="margin-top: 12px;">Session topic or track name here</div>
+    </div>
+
+    <!-- Bottom: CTA + URL -->
+    <div class="footer">
+      <div class="cta-btn">Save your spot →</div>
+      <div class="event-url">procuretex.com</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     MULTI SPEAKER CARD (3 speakers) — 1:1
+     ═══════════════════════════════════════ -->
+<div class="card" style="background: linear-gradient(135deg, #1A0A3C 0%, #3D1F8F 100%);">
+  <div class="content" style="justify-content: flex-start; gap: 0;">
+
+    <!-- Top row -->
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 20px;">
+      <div class="logo">Procure<span>TEX</span></div>
+      <div class="label" style="margin-bottom:0;">Speakers</div>
+    </div>
+
+    <!-- Headline -->
+    <div style="font-size:32px; font-weight:900; color:#fff; letter-spacing:-0.03em; line-height:1.05; margin-bottom:6px;">
+      Meet the<br>speakers
+    </div>
+    <div class="divider"></div>
+
+    <!-- Speaker list -->
+    <div style="display:flex; flex-direction:column; gap:14px; margin-top:8px; flex:1;">
+
+      <!-- Speaker row — repeat for each speaker -->
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="https://via.placeholder.com/52x52/6B35E8/fff?text=1" alt="Speaker 1"
+          style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1.5px solid rgba(200,255,0,0.25);">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Firstname Lastname</div>
+          <div style="font-size:11px;font-weight:500;color:#B8A8E8;">Job Title · <span style="color:#C8FF00;">Company</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="https://via.placeholder.com/52x52/3D1F8F/fff?text=2" alt="Speaker 2"
+          style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1.5px solid rgba(200,255,0,0.25);">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Firstname Lastname</div>
+          <div style="font-size:11px;font-weight:500;color:#B8A8E8;">Job Title · <span style="color:#C8FF00;">Company</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:12px;">
+        <img src="https://via.placeholder.com/52x52/1A0A3C/fff?text=3" alt="Speaker 3"
+          style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1.5px solid rgba(200,255,0,0.25);">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;letter-spacing:-0.02em;">Firstname Lastname</div>
+          <div style="font-size:11px;font-weight:500;color:#B8A8E8;">Job Title · <span style="color:#C8FF00;">Company</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer" style="margin-top:16px;">
+      <div class="cta-btn">Save your spot →</div>
+      <div class="event-url">procuretex.com</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
