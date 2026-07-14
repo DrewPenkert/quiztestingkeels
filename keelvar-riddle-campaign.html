@@ -7,6 +7,9 @@
 <!-- Font substitute: Keelvar's brand fonts (PP Mori / Universal Sans) are paid faces.
      Manrope is used here as a free geometric-sans stand-in with a similar character. -->
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/8354402.js"></script>
+<!-- End of HubSpot Embed Code -->
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -40,7 +43,7 @@
 
   /* ── Stage: real 16:9 canvas, sized to fill a laptop viewport ── */
   .stage {
-    width: min(1600px, 96vw, 170vh);
+    width: min(1750px, 97vw, 175vh);
     aspect-ratio: 16 / 9;
     background:
       linear-gradient(90deg, rgba(6,3,20,0.88) 0%, rgba(6,3,20,0.55) 42%, rgba(6,3,20,0.15) 68%, rgba(6,3,20,0.05) 100%),
@@ -138,11 +141,11 @@
   }
 
   /* ══════════════ LANDING ══════════════ */
-  #landing { justify-content: space-between; }
+  #landing { justify-content: space-between; align-items: center; text-align: center; }
 
-  .landing-top { display: flex; justify-content: space-between; align-items: flex-start; }
+  .landing-top { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; max-width: 640px; }
 
-  .landing-mid { margin-top: 3%; max-width: 620px; }
+  .landing-mid { margin: 3% auto 0; max-width: 620px; display: flex; flex-direction: column; align-items: center; }
 
   .headline {
     font-size: clamp(30px, 3.6vw, 46px);
@@ -159,10 +162,12 @@
     color: var(--lavender-light);
     line-height: 1.65;
     max-width: 460px;
+    margin: 0 auto;
   }
 
   .rule-row {
     display: flex;
+    justify-content: center;
     gap: 10px;
     margin-top: 28px;
     flex-wrap: wrap;
@@ -181,7 +186,7 @@
   }
   .rule-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--menthol); flex-shrink: 0; }
 
-  .landing-bottom { display: flex; flex-direction: column; gap: 16px; }
+  .landing-bottom { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 640px; }
 
   .week-tag {
     font-size: 11px;
@@ -191,6 +196,7 @@
   }
 
   /* ══════════════ RIDDLE ══════════════ */
+  #riddle { align-items: center; }
   #riddle .riddle-head {
     display: flex;
     justify-content: space-between;
@@ -321,6 +327,7 @@
   .feedback-msg.timeout { background: rgba(252,196,8,0.12); color: var(--canary); }
 
   /* ══════════════ LEADERBOARD ══════════════ */
+  #leaderboard { align-items: center; }
   #leaderboard > * { max-width: 560px; width: 100%; }
 
   .score-summary {
@@ -592,6 +599,17 @@
   const TIME_LIMIT = 60;
   const HINT_PENALTY = 20;
 
+  // HubSpot funnel tracking: each call logs a virtual pageview, so HubSpot's
+  // standard analytics (works on every Hub tier, no Enterprise custom events
+  // needed) reports time-between-views per funnel step — i.e. how long
+  // people sat on the landing screen before starting, how long they spent
+  // on the riddle before solving/timing out, etc.
+  function hsTrack(path) {
+    window._hsq = window._hsq || [];
+    window._hsq.push(['setPath', path]);
+    window._hsq.push(['trackPageView']);
+  }
+
   function getISOWeek(d) {
     const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     const dayNum = date.getUTCDay() || 7;
@@ -665,6 +683,7 @@
     if (state.solved) return;
     state.timedOut = true;
     showFeedback(`Time's up! The answer was "${riddle.title}".`, "timeout");
+    hsTrack(`/keelvar-riddle/${riddleIndex}/timeout`);
     document.getElementById("answer-input").disabled = true;
     document.querySelector("#answer-form button").disabled = true;
     document.getElementById("hint-btn").disabled = true;
@@ -698,6 +717,7 @@
 
       const points = Math.max(10, state.timeLeft * 2 - (state.hintUsed ? HINT_PENALTY : 0));
       showFeedback(`Correct! "${riddle.title}" — +${points} points`, "correct");
+      hsTrack(`/keelvar-riddle/${riddleIndex}/solved`);
       setTimeout(() => finishRiddle(points, "solved"), 1100);
     } else {
       input.classList.add("shake");
@@ -770,6 +790,7 @@
     resetRiddleScreen();
     startTimer();
     showScreen("riddle");
+    hsTrack(`/keelvar-riddle/${riddleIndex}/started`);
   });
 
   function resetRiddleScreen() {
@@ -798,6 +819,7 @@
     document.getElementById("submit-score-btn").textContent = "Saved ✓";
     document.getElementById("submit-score-btn").disabled = true;
     renderLeaderboard(name, score);
+    hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
   });
 
   document.getElementById("replay-btn").addEventListener("click", () => {
