@@ -1,0 +1,7 @@
+name = "keelvar-riddle-leaderboard"
+main = "src/index.js"
+compatibility_date = "2026-07-20"
+
+kv_namespaces = [
+  { binding = "LEADERBOARD", id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID" }
+]

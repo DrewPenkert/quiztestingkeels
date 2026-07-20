@@ -626,7 +626,29 @@
     : (weekNum - 1) % RIDDLES.length;
 
   const riddle = RIDDLES[riddleIndex];
-  const LB_KEY = "keelvar_riddle_leaderboard_" + riddleIndex;
+
+  // Live shared leaderboard for this internal trial: reads/writes a JSON file
+  // directly in this GitHub repo via the Contents API. The write token below
+  // is visible to anyone viewing page source — fine for an internal trial
+  // audience, NOT safe once this goes out publicly (swap for worker/ then).
+  const GH_OWNER = "DrewPenkert";
+  const GH_REPO = "quiztestingkeels";
+  const GH_BRANCH = "main";
+  const GH_DATA_PATH = "data/leaderboard.json";
+  const GH_TOKEN = "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N"; // Contents: Read & write, this repo only
+  const GH_RAW_URL = `https://raw.githubusercontent.com/${GH_OWNER}/${GH_REPO}/${GH_BRANCH}/${GH_DATA_PATH}`;
+  const GH_API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_PATH}`;
+  const MAX_ENTRIES = 50;
+  const POLL_INTERVAL_MS = 8000;
+  let pollTimerId = null;
+
+  function b64EncodeUnicode(str) {
+    return btoa(unescape(encodeURIComponent(str)));
+  }
+
+  function b64DecodeUnicode(str) {
+    return decodeURIComponent(escape(atob(str)));
+  }
 
   let state = { hintUsed: false, timeLeft: TIME_LIMIT, timerId: null, solved: false, timedOut: false };
 
@@ -739,27 +761,83 @@
       label.textContent = "points this week";
     }
     renderLeaderboard(null, points);
+    startPolling();
     showScreen("leaderboard");
   }
 
-  function getLeaderboard() {
+  async function fetchAllLeaderboards() {
     try {
-      return JSON.parse(localStorage.getItem(LB_KEY)) || [];
+      const res = await fetch(`${GH_RAW_URL}?t=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) return {};
+      const data = await res.json();
+      return data && typeof data === "object" ? data : {};
     } catch (e) {
-      return [];
+      return {};
     }
   }
 
-  function saveLeaderboard(list) {
-    localStorage.setItem(LB_KEY, JSON.stringify(list));
+  async function fetchLeaderboard() {
+    const all = await fetchAllLeaderboards();
+    const list = Array.isArray(all[riddleIndex]) ? all[riddleIndex] : [];
+    return list.slice().sort((a, b) => b.score - a.score).slice(0, 10);
   }
 
-  function renderLeaderboard(justAddedName, currentScore) {
-    const list = getLeaderboard()
-      .slice()
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 10);
+  async function postScore(name, score) {
+    const getRes = await fetch(`${GH_API_URL}?ref=${GH_BRANCH}`, {
+      headers: { Authorization: `token ${GH_TOKEN}`, Accept: "application/vnd.github+json" },
+    });
+    if (!getRes.ok) throw new Error("fetch current file failed");
+    const fileData = await getRes.json();
+    const all = fileData.content ? JSON.parse(b64DecodeUnicode(fileData.content)) : {};
 
+    const list = Array.isArray(all[riddleIndex]) ? all[riddleIndex] : [];
+    list.push({ name, score, date: Date.now() });
+    list.sort((a, b) => b.score - a.score);
+    all[riddleIndex] = list.slice(0, MAX_ENTRIES);
+
+    const putRes = await fetch(GH_API_URL, {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${GH_TOKEN}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: `Add score: ${name} (${score}) — riddle ${riddleIndex}`,
+        content: b64EncodeUnicode(JSON.stringify(all)),
+        sha: fileData.sha,
+        branch: GH_BRANCH,
+      }),
+    });
+    if (!putRes.ok) throw new Error("submit failed");
+    return all[riddleIndex].slice(0, 10);
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollTimerId = setInterval(async () => {
+      if (!screens.leaderboard.classList.contains("active")) return;
+      const list = await fetchLeaderboard();
+      renderLeaderboardList(list, lastJustAddedName, lastCurrentScore);
+    }, POLL_INTERVAL_MS);
+  }
+
+  function stopPolling() {
+    if (pollTimerId) clearInterval(pollTimerId);
+    pollTimerId = null;
+  }
+
+  let lastJustAddedName = null;
+  let lastCurrentScore = null;
+
+  async function renderLeaderboard(justAddedName, currentScore) {
+    lastJustAddedName = justAddedName;
+    lastCurrentScore = currentScore;
+    const list = await fetchLeaderboard();
+    renderLeaderboardList(list, justAddedName, currentScore);
+  }
+
+  function renderLeaderboardList(list, justAddedName, currentScore) {
     const wrap = document.getElementById("board-list");
     wrap.innerHTML = "";
 
@@ -806,23 +884,31 @@
     updateTimerUI();
   }
 
-  document.getElementById("submit-score-btn").addEventListener("click", () => {
+  document.getElementById("submit-score-btn").addEventListener("click", async () => {
     const input = document.getElementById("name-input");
     const name = input.value.trim();
     if (!name) { input.focus(); return; }
 
     const score = parseInt(document.getElementById("final-score").textContent, 10) || 0;
-    const list = getLeaderboard();
-    list.push({ name, score, date: Date.now() });
-    saveLeaderboard(list);
-    input.disabled = true;
-    document.getElementById("submit-score-btn").textContent = "Saved ✓";
-    document.getElementById("submit-score-btn").disabled = true;
-    renderLeaderboard(name, score);
-    hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
+    const btn = document.getElementById("submit-score-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving…";
+    try {
+      const list = await postScore(name, score);
+      input.disabled = true;
+      btn.textContent = "Saved ✓";
+      lastJustAddedName = name;
+      lastCurrentScore = score;
+      renderLeaderboardList(list, name, score);
+      hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
+    } catch (e) {
+      btn.textContent = "Couldn't save — retry";
+      btn.disabled = false;
+    }
   });
 
   document.getElementById("replay-btn").addEventListener("click", () => {
+    stopPolling();
     document.getElementById("name-input").value = "";
     document.getElementById("name-input").disabled = false;
     document.getElementById("submit-score-btn").textContent = "Save";
