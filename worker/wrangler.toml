@@ -3,5 +3,5 @@ main = "src/index.js"
 compatibility_date = "2026-07-20"
 
 kv_namespaces = [
-  { binding = "LEADERBOARD", id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID" }
+  { binding = "LEADERBOARD", id = "7927e845134b49e0b5969d25ba4c4129" }
 ]
