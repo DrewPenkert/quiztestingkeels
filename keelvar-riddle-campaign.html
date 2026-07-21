@@ -740,6 +740,7 @@
 
     document.getElementById("lead-form-section").style.display = "";
     document.getElementById("lead-form-confirm").style.display = "none";
+    leadFormHandled = false;
 
     const list = await fetchLeaderboard();
     const rank = list.filter(e => e.score > points).length + 1;
@@ -838,32 +839,63 @@
     updateTimerUI();
   }
 
-  function extractNameFromSubmission(data) {
-    const values = (data && data.submissionValues) || {};
+  // HubSpot's embed/v2.js callback param shapes aren't consistently documented across
+  // versions, so submissionValues may arrive as an object OR as an array of {name, value}.
+  // Normalize both, and fall back to postMessage (the documented, version-stable mechanism)
+  // in case the direct callback never fires or arrives with an unexpected shape.
+  function normalizeSubmissionValues(raw) {
+    if (!raw) return {};
+    if (Array.isArray(raw)) {
+      const out = {};
+      raw.forEach(f => { if (f && f.name) out[f.name] = f.value; });
+      return out;
+    }
+    return raw;
+  }
+
+  function extractNameFromValues(values) {
     if (values.firstname) return values.firstname;
     if (values.email) return values.email.split("@")[0];
     return "Anonymous";
   }
+
+  let leadFormHandled = false;
+
+  async function handleLeadFormSubmitted(values) {
+    if (leadFormHandled) return;
+    leadFormHandled = true;
+
+    const name = extractNameFromValues(values);
+    const score = lastCurrentScore || 0;
+    try {
+      const list = await postScore(name, score);
+      document.getElementById("lead-form-section").style.display = "none";
+      document.getElementById("lead-form-confirm").style.display = "block";
+      lastJustAddedName = name;
+      renderLeaderboardList(list, name, score);
+      hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
+    } catch (e) {
+      console.error("Leaderboard save failed after HubSpot form submission:", e);
+      leadFormHandled = false;
+      document.getElementById("lead-form-confirm").textContent = "Saved to HubSpot, but the leaderboard couldn't be updated — refresh and try again.";
+      document.getElementById("lead-form-confirm").style.display = "block";
+    }
+  }
+
+  window.addEventListener("message", (event) => {
+    if (!event.data || event.data.type !== "hsFormCallback") return;
+    if (event.data.eventName !== "onFormSubmitted" && event.data.eventName !== "onFormSubmit") return;
+    if (event.data.eventName === "onFormSubmit" && leadFormHandled) return;
+    handleLeadFormSubmitted(normalizeSubmissionValues(event.data.data));
+  });
 
   hbspt.forms.create({
     portalId: "8354402",
     formId: "e7881ba0-5eeb-4a77-9c44-4201c45b6864",
     region: "na1",
     target: "#hs-lead-form",
-    onFormSubmitted: async function (form, data) {
-      const name = extractNameFromSubmission(data);
-      const score = lastCurrentScore || 0;
-      try {
-        const list = await postScore(name, score);
-        document.getElementById("lead-form-section").style.display = "none";
-        document.getElementById("lead-form-confirm").style.display = "block";
-        lastJustAddedName = name;
-        renderLeaderboardList(list, name, score);
-        hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
-      } catch (e) {
-        // Leaderboard save failed, but the HubSpot submission already went through —
-        // leave the form's own success state as-is rather than showing a confusing retry.
-      }
+    onFormSubmitted: function (form, data) {
+      handleLeadFormSubmitted(normalizeSubmissionValues(data && data.submissionValues));
     }
   });
 
