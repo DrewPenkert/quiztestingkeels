@@ -10,6 +10,8 @@
 <!-- Start of HubSpot Embed Code -->
 <script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/8354402.js"></script>
 <!-- End of HubSpot Embed Code -->
+<!-- HubSpot lead-capture form (separate from the hsTrack() virtual-pageview funnel tracking below) -->
+<script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -412,6 +414,13 @@
   }
   .lb-actions .btn { flex: 1; }
 
+  .lead-form-wrap {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .lead-form-wrap .pill { margin: 0 auto 12px; }
+
   @media (max-width: 760px) {
     .stage { aspect-ratio: auto; min-height: 100vh; border-radius: 0; }
     .screen { padding: 24px; }
@@ -527,9 +536,24 @@
       <button class="btn ghost" id="replay-btn">Try again</button>
       <a class="btn menthol" href="https://keelvar.com" target="_blank" rel="noopener" style="text-decoration:none;">Visit keelvar.com →</a>
     </div>
+
+    <div class="lead-form-wrap">
+      <div class="pill">Want more procurement insights?</div>
+      <div id="hs-lead-form"></div>
+    </div>
   </div>
 
 </div>
+
+<!-- HubSpot lead-capture form: independent of the funnel/virtual-pageview tracking below -->
+<script>
+  hbspt.forms.create({
+    portalId: "8354402",
+    formId: "e7881ba0-5eeb-4a77-9c44-4201c45b6864",
+    region: "na1",
+    target: "#hs-lead-form"
+  });
+</script>
 
 <script>
 (function () {
