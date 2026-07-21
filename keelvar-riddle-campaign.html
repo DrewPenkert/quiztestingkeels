@@ -351,25 +351,6 @@
     margin-top: 6px;
   }
 
-  .name-form {
-    display: flex;
-    gap: 8px;
-    margin: 20px 0;
-  }
-  .name-form input {
-    flex: 1;
-    background: rgba(255,255,255,0.08);
-    border: 1.5px solid rgba(255,255,255,0.18);
-    border-radius: 100px;
-    padding: 0 18px;
-    height: 48px;
-    font-family: inherit;
-    font-size: 14px;
-    color: var(--alabaster);
-  }
-  .name-form input::placeholder { color: rgba(196,207,255,0.6); }
-  .name-form input:focus { outline: none; border-color: var(--grape); }
-
   .board-list {
     display: flex;
     flex-direction: column;
@@ -522,12 +503,15 @@
       <div class="pill" style="margin-left:auto;margin-right:auto;" id="result-pill">Riddle solved</div>
       <div class="final-score" id="final-score">0</div>
       <div class="final-score-label" id="final-score-label">points this week</div>
+      <div class="pill" id="rank-preview" style="margin:14px auto 0;"></div>
     </div>
 
-    <div class="name-form">
-      <input type="text" id="name-input" placeholder="Your name" maxlength="30">
-      <button class="btn" id="submit-score-btn">Save</button>
+    <div class="lead-form-wrap" id="lead-form-section">
+      <div class="pill">Enter the leaderboard</div>
+      <div id="hs-lead-form"></div>
     </div>
+
+    <div id="lead-form-confirm" style="display:none; text-align:center; font-size:13px; font-weight:700; color:var(--menthol); margin-bottom:14px;">You're on the board! 🎉</div>
 
     <div class="pill" style="margin-bottom:10px;">This week's leaderboard</div>
     <div class="board-list" id="board-list"></div>
@@ -536,24 +520,10 @@
       <button class="btn ghost" id="replay-btn">Try again</button>
       <a class="btn menthol" href="https://keelvar.com" target="_blank" rel="noopener" style="text-decoration:none;">Visit keelvar.com →</a>
     </div>
-
-    <div class="lead-form-wrap">
-      <div class="pill">Want more procurement insights?</div>
-      <div id="hs-lead-form"></div>
-    </div>
   </div>
 
 </div>
 
-<!-- HubSpot lead-capture form: independent of the funnel/virtual-pageview tracking below -->
-<script>
-  hbspt.forms.create({
-    portalId: "8354402",
-    formId: "e7881ba0-5eeb-4a77-9c44-4201c45b6864",
-    region: "na1",
-    target: "#hs-lead-form"
-  });
-</script>
 
 <script>
 (function () {
@@ -756,7 +726,7 @@
     }
   });
 
-  function finishRiddle(points, outcome) {
+  async function finishRiddle(points, outcome) {
     document.getElementById("final-score").textContent = points;
     const pill = document.getElementById("result-pill");
     const label = document.getElementById("final-score-label");
@@ -767,7 +737,17 @@
       pill.textContent = "Time's up";
       label.textContent = "points this week";
     }
-    renderLeaderboard(null, points);
+
+    document.getElementById("lead-form-section").style.display = "";
+    document.getElementById("lead-form-confirm").style.display = "none";
+
+    const list = await fetchLeaderboard();
+    const rank = list.filter(e => e.score > points).length + 1;
+    document.getElementById("rank-preview").textContent = `You'd rank #${rank} this week!`;
+    lastJustAddedName = null;
+    lastCurrentScore = points;
+    renderLeaderboardList(list, null, points);
+
     startPolling();
     showScreen("leaderboard");
   }
@@ -810,13 +790,6 @@
 
   let lastJustAddedName = null;
   let lastCurrentScore = null;
-
-  async function renderLeaderboard(justAddedName, currentScore) {
-    lastJustAddedName = justAddedName;
-    lastCurrentScore = currentScore;
-    const list = await fetchLeaderboard();
-    renderLeaderboardList(list, justAddedName, currentScore);
-  }
 
   function renderLeaderboardList(list, justAddedName, currentScore) {
     const wrap = document.getElementById("board-list");
@@ -865,35 +838,37 @@
     updateTimerUI();
   }
 
-  document.getElementById("submit-score-btn").addEventListener("click", async () => {
-    const input = document.getElementById("name-input");
-    const name = input.value.trim();
-    if (!name) { input.focus(); return; }
+  function extractNameFromSubmission(data) {
+    const values = (data && data.submissionValues) || {};
+    if (values.firstname) return values.firstname;
+    if (values.email) return values.email.split("@")[0];
+    return "Anonymous";
+  }
 
-    const score = parseInt(document.getElementById("final-score").textContent, 10) || 0;
-    const btn = document.getElementById("submit-score-btn");
-    btn.disabled = true;
-    btn.textContent = "Saving…";
-    try {
-      const list = await postScore(name, score);
-      input.disabled = true;
-      btn.textContent = "Saved ✓";
-      lastJustAddedName = name;
-      lastCurrentScore = score;
-      renderLeaderboardList(list, name, score);
-      hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
-    } catch (e) {
-      btn.textContent = "Couldn't save — retry";
-      btn.disabled = false;
+  hbspt.forms.create({
+    portalId: "8354402",
+    formId: "e7881ba0-5eeb-4a77-9c44-4201c45b6864",
+    region: "na1",
+    target: "#hs-lead-form",
+    onFormSubmitted: async function (form, data) {
+      const name = extractNameFromSubmission(data);
+      const score = lastCurrentScore || 0;
+      try {
+        const list = await postScore(name, score);
+        document.getElementById("lead-form-section").style.display = "none";
+        document.getElementById("lead-form-confirm").style.display = "block";
+        lastJustAddedName = name;
+        renderLeaderboardList(list, name, score);
+        hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
+      } catch (e) {
+        // Leaderboard save failed, but the HubSpot submission already went through —
+        // leave the form's own success state as-is rather than showing a confusing retry.
+      }
     }
   });
 
   document.getElementById("replay-btn").addEventListener("click", () => {
     stopPolling();
-    document.getElementById("name-input").value = "";
-    document.getElementById("name-input").disabled = false;
-    document.getElementById("submit-score-btn").textContent = "Save";
-    document.getElementById("submit-score-btn").disabled = false;
     resetRiddleScreen();
     startTimer();
     showScreen("riddle");
