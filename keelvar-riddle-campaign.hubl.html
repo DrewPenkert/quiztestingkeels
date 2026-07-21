@@ -1,0 +1,918 @@
+<!--
+templateType: page
+isAvailableForNewContent: true
+label: Keelvar Weekly Procurement Riddle
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keelvar Weekly Procurement Riddle</title>
+{{ standard_header_includes }}
+<!-- Font substitute: Keelvar's brand fonts (PP Mori / Universal Sans) are paid faces.
+     Manrope is used here as a free geometric-sans stand-in with a similar character. -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- HubSpot's own analytics script is injected automatically via standard_header_includes/
+     standard_footer_includes on this template — no manual hs-script-loader tag needed here. -->
+<!-- HubSpot lead-capture form (separate from the hsTrack() virtual-pageview funnel tracking below) -->
+<script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/embed/v2.js"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --grape:          #7878FF;
+    --midnight:       #210D59;
+    --lavender:       #9661F5;
+    --lavender-light: #C4CFFF;
+    --jungle:         #213036;
+    --menthol:        #D1FF9E;
+    --tiffany:        #2EBDC2;
+    --canary:         #FCC408;
+    --sunburnt:       #FA474D;
+    --alabaster:      #FFFFFF;
+    --charcoal:       #000000;
+  }
+
+  html, body {
+    background: var(--charcoal);
+    font-family: 'Manrope', sans-serif;
+    color: var(--alabaster);
+    min-height: 100vh;
+  }
+
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  /* ── Stage: real 16:9 canvas, sized to fill a laptop viewport ── */
+  .stage {
+    width: min(1750px, 97vw, 175vh);
+    aspect-ratio: 16 / 9;
+    background:
+      linear-gradient(90deg, rgba(6,3,20,0.88) 0%, rgba(6,3,20,0.55) 42%, rgba(6,3,20,0.15) 68%, rgba(6,3,20,0.05) 100%),
+      url("Keelvar/Gradients/Keelvar_Mesh_Gradient_1920x1080.png");
+    background-size: cover, cover;
+    background-position: center, center;
+    background-repeat: no-repeat, no-repeat;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+  }
+
+  .screen {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: none;
+    flex-direction: column;
+    padding: 5% 6%;
+  }
+  .screen.active { display: flex; }
+
+  /* ── Shared ── */
+  .brand-logo {
+    height: 26px;
+    width: auto;
+    display: block;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(120,120,255,0.4);
+    background: rgba(120,120,255,0.1);
+    border-radius: 100px;
+    padding: 5px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--lavender-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+
+  .divider {
+    width: 36px;
+    height: 3px;
+    background: var(--grape);
+    margin: 18px 0;
+    border-radius: 2px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--grape);
+    border: none;
+    border-radius: 100px;
+    padding: 0 26px;
+    height: 50px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--alabaster);
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(120,120,255,0.35); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: none; }
+  .btn.ghost {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--alabaster);
+  }
+  .btn.ghost:hover { box-shadow: none; border-color: var(--grape); }
+  .btn.menthol { background: var(--menthol); color: var(--midnight); }
+  .btn.menthol:hover { box-shadow: 0 10px 28px rgba(209,255,158,0.3); }
+
+  .footer-url {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--lavender-light);
+    text-align: center;
+    margin-top: auto;
+    padding-top: 24px;
+    opacity: 0.8;
+  }
+
+  /* ══════════════ LANDING ══════════════ */
+  #landing { justify-content: space-between; align-items: center; text-align: center; }
+
+  .landing-top { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; max-width: 640px; }
+
+  .landing-mid { margin: 3% auto 0; max-width: 620px; display: flex; flex-direction: column; align-items: center; }
+
+  .headline {
+    font-size: clamp(30px, 3.6vw, 46px);
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+    margin: 18px 0 14px;
+  }
+  .headline .accent { color: var(--menthol); }
+
+  .subtext {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--lavender-light);
+    line-height: 1.65;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .rule-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+  .rule-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 10px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--alabaster);
+  }
+  .rule-chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--menthol); flex-shrink: 0; }
+
+  .landing-bottom { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 640px; }
+
+  .week-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lavender-light);
+    letter-spacing: 0.04em;
+  }
+
+  /* ══════════════ RIDDLE ══════════════ */
+  #riddle { align-items: center; }
+  #riddle .riddle-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .timer-wrap {
+    margin: 20px 0 24px;
+  }
+  .timer-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--lavender-light);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  #timer-count { color: var(--menthol); }
+  .timer-track {
+    height: 6px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.1);
+    overflow: hidden;
+  }
+  .timer-fill {
+    height: 100%;
+    width: 100%;
+    background: var(--menthol);
+    border-radius: 6px;
+    transition: width 1s linear, background 0.3s ease;
+  }
+  .timer-fill.warn { background: var(--canary); }
+  .timer-fill.danger { background: var(--sunburnt); }
+
+  #riddle > * { max-width: 640px; width: 100%; }
+
+  .riddle-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(120,120,255,0.25);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .riddle-text {
+    font-size: 19px;
+    font-weight: 600;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    white-space: pre-line;
+  }
+
+  .answer-form {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .answer-form input {
+    flex: 1;
+    background: rgba(255,255,255,0.08);
+    border: 1.5px solid rgba(255,255,255,0.18);
+    border-radius: 100px;
+    padding: 0 18px;
+    height: 50px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--alabaster);
+  }
+  .answer-form input::placeholder { color: rgba(196,207,255,0.6); }
+  .answer-form input:focus { outline: none; border-color: var(--grape); }
+  .answer-form input.shake { animation: shake 0.4s ease; border-color: var(--sunburnt); }
+
+  @keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+  }
+
+  .hint-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 12px;
+  }
+  .hint-link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--tiffany);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .hint-link:disabled { color: rgba(255,255,255,0.3); cursor: default; }
+
+  .hint-box {
+    display: none;
+    margin-bottom: 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: rgba(46,189,194,0.1);
+    border: 1px dashed rgba(46,189,194,0.5);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--tiffany);
+    line-height: 1.5;
+  }
+  .hint-box.show { display: block; }
+  .hint-box b { color: var(--alabaster); }
+
+  .feedback-msg {
+    display: none;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .feedback-msg.show { display: block; }
+  .feedback-msg.wrong { background: rgba(250,71,77,0.12); color: var(--sunburnt); }
+  .feedback-msg.correct { background: rgba(209,255,158,0.12); color: var(--menthol); }
+  .feedback-msg.timeout { background: rgba(252,196,8,0.12); color: var(--canary); }
+
+  /* ══════════════ LEADERBOARD ══════════════ */
+  #leaderboard { align-items: center; overflow-y: auto; }
+  #leaderboard > * { max-width: 560px; width: 100%; }
+
+  .score-summary {
+    text-align: center;
+    padding: 20px 0 8px;
+  }
+  .score-summary .pill { margin: 0 auto 14px; }
+  .final-score {
+    font-size: 46px;
+    font-weight: 800;
+    color: var(--menthol);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .final-score-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--lavender-light);
+    margin-top: 6px;
+  }
+
+  .board-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+    max-height: 240px;
+    overflow-y: auto;
+  }
+  .board-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid transparent;
+  }
+  .board-row.me {
+    background: rgba(209,255,158,0.1);
+    border-color: rgba(209,255,158,0.4);
+  }
+  .rank {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .rank.top { background: var(--menthol); color: var(--midnight); }
+  .board-name { flex: 1; font-size: 13px; font-weight: 600; }
+  .board-score { font-size: 13px; font-weight: 800; color: var(--menthol); }
+
+  .lb-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  .lb-actions .btn { flex: 1; }
+
+  .lead-form-wrap {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+  .lead-form-wrap .pill { margin: 0 auto 12px; }
+
+  @media (max-width: 760px) {
+    .stage { aspect-ratio: auto; min-height: 100vh; border-radius: 0; }
+    .screen { padding: 24px; }
+    #riddle > *, #leaderboard > * { max-width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Real Keelvar logo mark: white wordmark + Grape chevron, per brand guidelines'
+     dark-background usage (page 8/10 of Keelvar Brand Guidelines). Defined once,
+     reused via <use>. Path data sourced from the brand kit's logo SVGs. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="keelvar-logo" viewBox="0 0 494.64 88.88">
+      <path fill="#7878FF" d="M450.11,0h-23.9l40.94,40.94c1.72,1.72,3.88,2.92,6.25,3.47-2.32.51-4.45,1.68-6.13,3.36l-41.05,41.11h24.89l43.54-44.44L450.11,0Z"/>
+      <path fill="#fff" d="M14.01,87.56H0V5.84h14.01v40.05L51.14,5.84h17.75l-31.99,33.51,34.33,48.22h-17.16l-26.86-38.06-13.19,13.78v24.28h-.01Z"/>
+      <path fill="#fff" d="M84.93,84.74c-4.77-2.71-8.68-6.72-11.27-11.56-2.74-5.15-4.12-10.92-4.03-16.75-.13-6.06,1.25-12.06,4.03-17.46,2.5-4.83,6.33-8.84,11.03-11.56,4.76-2.71,10.16-4.1,15.64-4.03,5.38-.12,10.69,1.23,15.35,3.91,4.45,2.67,8.04,6.56,10.33,11.21,2.61,5.36,3.92,11.26,3.85,17.22v3.27h-46.47c.47,5.53,2.32,9.95,5.55,13.25s7.45,4.96,12.67,4.96c3.25.09,6.46-.78,9.22-2.51,2.58-1.69,4.48-4.23,5.37-7.18h13.43c-1.28,6.24-4.76,11.82-9.81,15.7-4.98,3.78-11.09,5.66-18.33,5.66-5.8.11-11.52-1.32-16.58-4.14M115.62,49.29c-.86-4.51-2.63-8.02-5.31-10.51-2.71-2.5-6.29-3.84-9.98-3.74-3.82-.08-7.53,1.27-10.39,3.79-3.02,2.78-5.11,6.43-5.95,10.45h31.64-.01Z"/>
+      <path fill="#fff" d="M150.75,84.74c-4.77-2.71-8.68-6.72-11.27-11.56-2.74-5.15-4.12-10.92-4.03-16.75-.13-6.06,1.25-12.06,4.03-17.46,2.5-4.83,6.33-8.84,11.03-11.56,4.76-2.71,10.16-4.1,15.65-4.03,5.38-.12,10.69,1.23,15.35,3.91,4.45,2.67,8.04,6.56,10.33,11.21,2.61,5.36,3.92,11.26,3.85,17.22v3.27h-46.47c.47,5.53,2.32,9.95,5.55,13.25,3.23,3.31,7.45,4.96,12.67,4.96,3.25.09,6.46-.78,9.22-2.51,2.58-1.69,4.48-4.23,5.37-7.18h13.43c-1.28,6.24-4.76,11.82-9.81,15.7-4.98,3.78-11.09,5.66-18.33,5.66-5.8.11-11.52-1.32-16.58-4.14M181.45,49.29c-.86-4.51-2.63-8.02-5.31-10.51-2.71-2.5-6.29-3.84-9.98-3.74-3.82-.08-7.53,1.27-10.39,3.79-3.02,2.78-5.11,6.43-5.95,10.45h31.64-.01Z"/>
+      <rect fill="#fff" x="204.74" y="0" width="13.78" height="87.57"/>
+      <path fill="#fff" d="M264.76,87.56h-14.36l-25.8-61.88h14.94l18.1,45.65,17.98-45.65h14.93l-25.8,61.88h0Z"/>
+      <path fill="#fff" d="M297.38,83.57c-4.24-3.23-6.37-7.69-6.36-13.37,0-6.54,2.43-11.13,7.3-13.78,4.87-2.65,11.27-4.44,19.21-5.37.7-.08,2.82-.31,6.36-.7,3.54-.39,6.09-1.03,7.65-1.93,1.42-.68,2.33-2.11,2.33-3.68.02-2.84-1.27-5.53-3.5-7.3-2.26-1.83-5.33-2.74-9.22-2.74-3.62-.13-7.18.91-10.16,2.97-2.63,1.82-4.33,4.7-4.67,7.88h-13.9c.35-4.18,1.89-8.17,4.44-11.5,2.67-3.46,6.19-6.18,10.22-7.88,4.52-1.92,9.39-2.88,14.3-2.8,8.17,0,14.54,2.02,19.09,6.07s6.83,9.46,6.83,16.23v28.02c0,1.79,1.01,2.69,3.04,2.68h3.39v10.75h-6.54c-2.64.12-5.26-.53-7.53-1.87-1.9-1.23-3.22-3.16-3.68-5.37-.23-.69-.43-1.39-.58-2.1-3.81,7.08-10.78,10.63-20.9,10.63-7.16,0-12.86-1.61-17.1-4.85M329.21,73.81c3.06-2.37,4.79-6.06,4.67-9.93v-8.63c-1.17,1.75-2.97,2.98-5.02,3.44-3.22.83-6.5,1.44-9.81,1.81-4.83.55-8.39,1.36-10.68,2.45-2.3,1.09-3.44,3.11-3.44,6.07-.11,2.52,1.11,4.91,3.21,6.31,2.14,1.48,5.19,2.22,9.17,2.22,4.83,0,8.8-1.25,11.91-3.74"/>
+      <path fill="#fff" d="M360.85,87.56V25.69h11.09l1.64,12.14c4.05-8.56,11.21-12.84,21.48-12.84h2.34v13.43h-2.33c-6.46,0-11.48,1.63-15.06,4.9s-5.37,7.82-5.37,13.66v30.59h-13.79Z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="stage">
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 1 — LANDING
+       ═══════════════════════════════════════ -->
+  <div class="screen active" id="landing">
+    <div class="landing-top">
+      <svg class="brand-logo"><use href="#keelvar-logo"/></svg>
+      <div class="pill">Weekly Riddle</div>
+    </div>
+
+    <div class="landing-mid">
+      <div class="week-tag" id="week-tag">Riddle of the week</div>
+      <div class="headline">Are you ready to<br>solve <span class="accent">this week's</span><br>procurement riddle?</div>
+      <div class="subtext">One riddle. One clock. One hint if you need it. Answer correctly before time runs out and claim your spot on the leaderboard.</div>
+
+      <div class="rule-row">
+        <div class="rule-chip"><span class="dot"></span>60 seconds on the clock</div>
+        <div class="rule-chip"><span class="dot"></span>1 hint available</div>
+        <div class="rule-chip"><span class="dot"></span>Unlimited guesses</div>
+      </div>
+    </div>
+
+    <div class="landing-bottom">
+      <button class="btn" id="start-btn">Solve this week's riddle →</button>
+      <div class="footer-url">keelvar.com</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 2 — RIDDLE
+       ═══════════════════════════════════════ -->
+  <div class="screen" id="riddle">
+    <div class="riddle-head">
+      <svg class="brand-logo"><use href="#keelvar-logo"/></svg>
+      <div class="pill" id="riddle-count">Riddle 1</div>
+    </div>
+
+    <div class="timer-wrap">
+      <div class="timer-labels">
+        <span>Time remaining</span>
+        <span id="timer-count">60s</span>
+      </div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill"></div></div>
+    </div>
+
+    <div class="riddle-card">
+      <div class="riddle-text" id="riddle-text"></div>
+    </div>
+
+    <div class="feedback-msg" id="feedback-msg"></div>
+
+    <form class="answer-form" id="answer-form">
+      <input type="text" id="answer-input" placeholder="Type your answer…" autocomplete="off">
+      <button class="btn" type="submit">Submit</button>
+    </form>
+
+    <div class="hint-row">
+      <button class="hint-link" id="hint-btn" type="button">💡 Reveal my one hint</button>
+    </div>
+
+    <div class="hint-box" id="hint-box"><b>Hint:</b> <span id="hint-text"></span></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       SCREEN 3 — LEADERBOARD
+       ═══════════════════════════════════════ -->
+  <div class="screen" id="leaderboard">
+    <svg class="brand-logo"><use href="#keelvar-logo"/></svg>
+
+    <div class="score-summary">
+      <div class="pill" style="margin-left:auto;margin-right:auto;" id="result-pill">Riddle solved</div>
+      <div class="final-score" id="final-score">0</div>
+      <div class="final-score-label" id="final-score-label">points this week</div>
+      <div class="pill" id="rank-preview" style="margin:14px auto 0;"></div>
+    </div>
+
+    <div class="lead-form-wrap" id="lead-form-section">
+      <div class="pill">Enter the leaderboard</div>
+      <div id="hs-lead-form"></div>
+    </div>
+
+    <div id="lead-form-confirm" style="display:none; text-align:center; font-size:13px; font-weight:700; color:var(--menthol); margin-bottom:14px;">You're on the board! 🎉</div>
+
+    <div class="pill" style="margin-bottom:10px;">This week's leaderboard</div>
+    <div class="board-list" id="board-list"></div>
+
+    <div class="lb-actions">
+      <button class="btn ghost" id="replay-btn">Try again</button>
+      <a class="btn menthol" href="https://keelvar.com" target="_blank" rel="noopener" style="text-decoration:none;">Visit keelvar.com →</a>
+    </div>
+  </div>
+
+</div>
+
+
+<script>
+(function () {
+  const RIDDLES = [
+    {
+      title: "Procurement",
+      text: "I am the grand umbrella, the strategic master plan,\nAcquiring goods and services since business first began.\nFrom finding to paying, I manage the whole scene,\nWhat am I called in the corporate machine?",
+      hint: "It covers everything from purchase requisition to final payment — the entire discipline.",
+      answers: ["procurement"]
+    },
+    {
+      title: "Sourcing",
+      text: "Before the buying happens, I scan the market wide,\nEvaluating suppliers to find where strengths reside.\nI negotiate the contracts and find the perfect fit,\nWhich phase of the supply chain am I, piece by piece?",
+      hint: "It happens before you buy — evaluating and selecting suppliers.",
+      answers: ["sourcing"]
+    },
+    {
+      title: "RFP",
+      text: "I don't just ask for pricing; I ask for wit and skill,\nTell me how you'll solve my problem and how you'll fit the bill.\nI am a formal document for projects complex and grand,\nWhich three-letter acronym am I across the land?",
+      hint: "Three letters: it's a formal ask for a supplier's approach, not just their price.",
+      answers: ["rfp", "request for proposal"]
+    },
+    {
+      title: "RFQ",
+      text: "Skip the fancy stories, just tell me what it costs,\nI know exactly what I want, no time can be lost.\nSend me your lowest price for this specific spec,\nWhich document am I that keeps costs in check?",
+      hint: "Three letters: you already know the spec — you just want the number.",
+      answers: ["rfq", "request for quotation", "request for quote"]
+    },
+    {
+      title: "PO",
+      text: "I am a legal offer, born from a buyer's hand,\nSent to a vendor to make a firm demand.\nWith quantities and prices, I make the deal official,\nWhat two-letter document is highly beneficial?",
+      hint: "Two letters: the document that turns a quote into a binding order.",
+      answers: ["po", "purchase order"]
+    },
+    {
+      title: "TCO",
+      text: "Look beyond the sticker price, or you will surely weep,\nFor I include the maintenance and secrets that I keep.\nFrom birth to disposal, I calculate the weight,\nWhat three-letter acronym determines an asset's true fate?",
+      hint: "Three letters: sticker price is just the beginning of this calculation.",
+      answers: ["tco", "total cost of ownership"]
+    },
+    {
+      title: "SLA",
+      text: "I set the expectations for the quality you deliver,\nFail to meet my metrics, and your legal team will shiver.\nI measure uptime, speed, and care to keep our contract tight,\nWhich acronym ensures the service goes alright?",
+      hint: "Three letters: it's written into contracts to hold vendors accountable for performance.",
+      answers: ["sla", "service level agreement"]
+    },
+    {
+      title: "Maverick Spending",
+      text: "I bypass the pre-approved contract, I wander out of bounds,\nBuying from unlisted vendors on rogue and lawless grounds.\nI am the ghost in the budget that procurement tries to tame,\nWhat wild, untamed word is my infamous name?",
+      hint: "One word: buying outside the rules, off the approved supplier list.",
+      answers: ["maverick", "maverick spending", "maverick spend"]
+    },
+    {
+      title: "Lead Time",
+      text: "I am the ticking clock, the patient, anxious space,\nBetween the day you order and when it hits your place.\nIf I am long, you scramble; if short, you breathe at last,\nWhat two-word metric tells you if a delivery is slow or fast?",
+      hint: "Two words: the clock between order and delivery.",
+      answers: ["lead time"]
+    },
+    {
+      title: "SRM",
+      text: "I'm not about the paperwork, I'm about the human tie,\nCollaborating with key vendors so we both can fly.\nI manage trust and value, turning partners into friends,\nWhich strategic acronym ensures the bond never ends?",
+      hint: "Three letters: less about paperwork, more about the relationship with key suppliers.",
+      answers: ["srm", "supplier relationship management"]
+    }
+  ];
+
+  const TIME_LIMIT = 60;
+  const HINT_PENALTY = 20;
+
+  // HubSpot funnel tracking: each call logs a virtual pageview, so HubSpot's
+  // standard analytics (works on every Hub tier, no Enterprise custom events
+  // needed) reports time-between-views per funnel step — i.e. how long
+  // people sat on the landing screen before starting, how long they spent
+  // on the riddle before solving/timing out, etc.
+  function hsTrack(path) {
+    window._hsq = window._hsq || [];
+    window._hsq.push(['setPath', path]);
+    window._hsq.push(['trackPageView']);
+  }
+
+  function getISOWeek(d) {
+    const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    const dayNum = date.getUTCDay() || 7;
+    date.setUTCDate(date.getUTCDate() + 4 - dayNum);
+    const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const overrideIndex = params.get("riddle");
+  const weekNum = getISOWeek(new Date());
+  const riddleIndex = overrideIndex !== null
+    ? (parseInt(overrideIndex, 10) || 0) % RIDDLES.length
+    : (weekNum - 1) % RIDDLES.length;
+
+  const riddle = RIDDLES[riddleIndex];
+
+  // Live shared leaderboard, backed by a Cloudflare Worker + KV (see worker/).
+  // No secret lives in this page — the worker holds any credentials server-side.
+  const LEADERBOARD_API = "https://keelvar-riddle-leaderboard.keelvar-riddle.workers.dev/leaderboard";
+  const POLL_INTERVAL_MS = 8000;
+  let pollTimerId = null;
+
+  let state = { hintUsed: false, timeLeft: TIME_LIMIT, timerId: null, solved: false, timedOut: false };
+
+  const screens = {
+    landing: document.getElementById("landing"),
+    riddle: document.getElementById("riddle"),
+    leaderboard: document.getElementById("leaderboard"),
+  };
+
+  function showScreen(name) {
+    Object.values(screens).forEach(s => s.classList.remove("active"));
+    screens[name].classList.add("active");
+  }
+
+  document.getElementById("week-tag").textContent = `Riddle of the week · Week ${weekNum}`;
+  document.getElementById("riddle-count").textContent = `Riddle #${riddleIndex + 1}`;
+  document.getElementById("riddle-text").textContent = riddle.text;
+  document.getElementById("hint-text").textContent = riddle.hint;
+
+  function normalize(str) {
+    return str.toLowerCase().trim().replace(/[^a-z0-9 ]/g, "").replace(/\s+/g, " ");
+  }
+
+  function startTimer() {
+    state.timeLeft = TIME_LIMIT;
+    updateTimerUI();
+    state.timerId = setInterval(() => {
+      state.timeLeft -= 1;
+      updateTimerUI();
+      if (state.timeLeft <= 0) {
+        clearInterval(state.timerId);
+        handleTimeout();
+      }
+    }, 1000);
+  }
+
+  function updateTimerUI() {
+    const fill = document.getElementById("timer-fill");
+    const pct = Math.max(0, (state.timeLeft / TIME_LIMIT) * 100);
+    fill.style.width = pct + "%";
+    fill.classList.remove("warn", "danger");
+    if (state.timeLeft <= 10) fill.classList.add("danger");
+    else if (state.timeLeft <= 25) fill.classList.add("warn");
+    document.getElementById("timer-count").textContent = state.timeLeft + "s";
+  }
+
+  function showFeedback(text, type) {
+    const el = document.getElementById("feedback-msg");
+    el.textContent = text;
+    el.className = "feedback-msg show " + type;
+  }
+
+  function handleTimeout() {
+    if (state.solved) return;
+    state.timedOut = true;
+    showFeedback(`Time's up! The answer was "${riddle.title}".`, "timeout");
+    hsTrack(`/keelvar-riddle/${riddleIndex}/timeout`);
+    document.getElementById("answer-input").disabled = true;
+    document.querySelector("#answer-form button").disabled = true;
+    document.getElementById("hint-btn").disabled = true;
+    setTimeout(() => finishRiddle(0, "timeout"), 1400);
+  }
+
+  document.getElementById("hint-btn").addEventListener("click", () => {
+    if (state.hintUsed || state.solved || state.timedOut) return;
+    state.hintUsed = true;
+    document.getElementById("hint-box").classList.add("show");
+    document.getElementById("hint-btn").disabled = true;
+    document.getElementById("hint-btn").textContent = "Hint revealed";
+  });
+
+  document.getElementById("answer-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (state.solved || state.timedOut) return;
+
+    const input = document.getElementById("answer-input");
+    const guess = normalize(input.value);
+    if (!guess) return;
+
+    const isCorrect = riddle.answers.some(a => normalize(a) === guess);
+
+    if (isCorrect) {
+      state.solved = true;
+      clearInterval(state.timerId);
+      input.disabled = true;
+      document.querySelector("#answer-form button").disabled = true;
+      document.getElementById("hint-btn").disabled = true;
+
+      const points = Math.max(10, state.timeLeft * 2 - (state.hintUsed ? HINT_PENALTY : 0));
+      showFeedback(`Correct! "${riddle.title}" — +${points} points`, "correct");
+      hsTrack(`/keelvar-riddle/${riddleIndex}/solved`);
+      setTimeout(() => finishRiddle(points, "solved"), 1100);
+    } else {
+      input.classList.add("shake");
+      setTimeout(() => input.classList.remove("shake"), 400);
+      showFeedback("Not quite — give it another go.", "wrong");
+      input.select();
+    }
+  });
+
+  async function finishRiddle(points, outcome) {
+    document.getElementById("final-score").textContent = points;
+    const pill = document.getElementById("result-pill");
+    const label = document.getElementById("final-score-label");
+    if (outcome === "solved") {
+      pill.textContent = "Riddle solved";
+      label.textContent = "points this week";
+    } else {
+      pill.textContent = "Time's up";
+      label.textContent = "points this week";
+    }
+
+    document.getElementById("lead-form-section").style.display = "";
+    document.getElementById("lead-form-confirm").style.display = "none";
+    leadFormHandled = false;
+
+    const list = await fetchLeaderboard();
+    const rank = list.filter(e => e.score > points).length + 1;
+    document.getElementById("rank-preview").textContent = `You'd rank #${rank} this week!`;
+    lastJustAddedName = null;
+    lastCurrentScore = points;
+    renderLeaderboardList(list, null, points);
+
+    startPolling();
+    showScreen("leaderboard");
+  }
+
+  async function fetchLeaderboard() {
+    try {
+      const res = await fetch(`${LEADERBOARD_API}?riddle=${riddleIndex}`);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data.leaderboard) ? data.leaderboard : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async function postScore(name, score) {
+    const res = await fetch(LEADERBOARD_API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ riddle: riddleIndex, name, score }),
+    });
+    if (!res.ok) throw new Error("submit failed");
+    const data = await res.json();
+    return Array.isArray(data.leaderboard) ? data.leaderboard : [];
+  }
+
+  function startPolling() {
+    stopPolling();
+    pollTimerId = setInterval(async () => {
+      if (!screens.leaderboard.classList.contains("active")) return;
+      const list = await fetchLeaderboard();
+      renderLeaderboardList(list, lastJustAddedName, lastCurrentScore);
+    }, POLL_INTERVAL_MS);
+  }
+
+  function stopPolling() {
+    if (pollTimerId) clearInterval(pollTimerId);
+    pollTimerId = null;
+  }
+
+  let lastJustAddedName = null;
+  let lastCurrentScore = null;
+
+  function renderLeaderboardList(list, justAddedName, currentScore) {
+    const wrap = document.getElementById("board-list");
+    wrap.innerHTML = "";
+
+    if (list.length === 0) {
+      wrap.innerHTML = `<div style="font-size:12px;color:var(--lavender-light);text-align:center;padding:12px;">No scores yet this week — be the first!</div>`;
+      return;
+    }
+
+    list.forEach((entry, i) => {
+      const row = document.createElement("div");
+      row.className = "board-row" + (justAddedName && entry.name === justAddedName && entry.score === currentScore ? " me" : "");
+      row.innerHTML = `
+        <div class="rank${i < 3 ? " top" : ""}">${i + 1}</div>
+        <div class="board-name">${escapeHtml(entry.name)}</div>
+        <div class="board-score">${entry.score}</div>
+      `;
+      wrap.appendChild(row);
+    });
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  document.getElementById("start-btn").addEventListener("click", () => {
+    resetRiddleScreen();
+    startTimer();
+    showScreen("riddle");
+    hsTrack(`/keelvar-riddle/${riddleIndex}/started`);
+  });
+
+  function resetRiddleScreen() {
+    state = { hintUsed: false, timeLeft: TIME_LIMIT, timerId: null, solved: false, timedOut: false };
+    const input = document.getElementById("answer-input");
+    input.value = "";
+    input.disabled = false;
+    document.querySelector("#answer-form button").disabled = false;
+    document.getElementById("hint-btn").disabled = false;
+    document.getElementById("hint-btn").textContent = "💡 Reveal my one hint";
+    document.getElementById("hint-box").classList.remove("show");
+    document.getElementById("feedback-msg").classList.remove("show", "wrong", "correct", "timeout");
+    updateTimerUI();
+  }
+
+  // HubSpot's embed/v2.js callback param shapes aren't consistently documented across
+  // versions, so submissionValues may arrive as an object OR as an array of {name, value}.
+  // Normalize both, and fall back to postMessage (the documented, version-stable mechanism)
+  // in case the direct callback never fires or arrives with an unexpected shape.
+  function normalizeSubmissionValues(raw) {
+    if (!raw) return {};
+    if (Array.isArray(raw)) {
+      const out = {};
+      raw.forEach(f => { if (f && f.name) out[f.name] = f.value; });
+      return out;
+    }
+    return raw;
+  }
+
+  function extractNameFromValues(values) {
+    if (values.firstname) return values.firstname;
+    if (values.email) return values.email.split("@")[0];
+    return "Anonymous";
+  }
+
+  let leadFormHandled = false;
+
+  async function handleLeadFormSubmitted(values) {
+    if (leadFormHandled) return;
+    leadFormHandled = true;
+
+    const name = extractNameFromValues(values);
+    const score = lastCurrentScore || 0;
+    try {
+      const list = await postScore(name, score);
+      document.getElementById("lead-form-section").style.display = "none";
+      document.getElementById("lead-form-confirm").style.display = "block";
+      lastJustAddedName = name;
+      renderLeaderboardList(list, name, score);
+      hsTrack(`/keelvar-riddle/${riddleIndex}/leaderboard-saved`);
+    } catch (e) {
+      console.error("Leaderboard save failed after HubSpot form submission:", e);
+      leadFormHandled = false;
+      document.getElementById("lead-form-confirm").textContent = "Saved to HubSpot, but the leaderboard couldn't be updated — refresh and try again.";
+      document.getElementById("lead-form-confirm").style.display = "block";
+    }
+  }
+
+  window.addEventListener("message", (event) => {
+    if (!event.data || event.data.type !== "hsFormCallback") return;
+    if (event.data.eventName !== "onFormSubmitted" && event.data.eventName !== "onFormSubmit") return;
+    if (event.data.eventName === "onFormSubmit" && leadFormHandled) return;
+    handleLeadFormSubmitted(normalizeSubmissionValues(event.data.data));
+  });
+
+  hbspt.forms.create({
+    portalId: "8354402",
+    formId: "121dcdd7-5c87-43b1-aeaa-3796cece4222",
+    region: "na1",
+    target: "#hs-lead-form",
+    onFormSubmitted: function (form, data) {
+      handleLeadFormSubmitted(normalizeSubmissionValues(data && data.submissionValues));
+    }
+  });
+
+  document.getElementById("replay-btn").addEventListener("click", () => {
+    stopPolling();
+    resetRiddleScreen();
+    startTimer();
+    showScreen("riddle");
+  });
+})();
+</script>
+
+{{ standard_footer_includes }}
+</body>
+</html>
